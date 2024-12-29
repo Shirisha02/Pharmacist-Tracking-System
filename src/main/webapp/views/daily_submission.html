@@ -1,0 +1,232 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Activity Submission</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+        }
+
+        .side-nav {
+            width: 250px;
+            background-color: #2c3e50;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 20px;
+        }
+
+        .side-nav .logo {
+            font-size: 1.5em;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .side-nav ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .side-nav ul li {
+            margin: 15px 0;
+        }
+
+        .side-nav ul li a {
+            text-decoration: none;
+            color: white;
+            font-size: 1em;
+            display: block;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .side-nav ul li a:hover {
+            background-color: #34495e;
+        }
+
+        .side-nav .profile {
+            text-align: center;
+        }
+
+        .side-nav .profile img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+
+        .side-nav .profile button {
+            background-color: #e74c3c;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .side-nav .profile button:hover {
+            background-color: #c0392b;
+        }
+
+        main {
+            flex-grow: 1;
+            padding: 20px;
+        }
+
+        #video {
+            max-height: 300px;
+        }
+    </style>
+</head>
+<body>
+    <div class="side-nav">
+        <div>
+            <div class="logo">MedTrackPro</div>
+            <ul>
+                <li><a href="representative_dashboard.html">Home</a></li>
+                <li><a href="daily_submission.html">Submit Activity</a></li>
+                <li><a href="View_Logs.html">Logs</a></li>
+                <li><a href="reports.html">Reports</a></li>
+                <li><a href="Contact_Admin.html">Contact Admin</a></li>
+                <li><a href="Add_Doctor.html">Doctor Details</a></li>
+            </ul>
+        </div>
+        <div class="profile">
+            <img src="https://via.placeholder.com/60" alt="Profile Picture">
+            <p>John Doe</p>
+            <button>Logout</button>
+        </div>
+    </div>
+
+    <main>
+        <header class="bg-primary text-white p-3 mb-4">
+            <h1 class="h3">Daily Activity Submission</h1>
+        </header>
+        <div class="card shadow">
+            <div class="card-header bg-secondary text-white">
+                <h4>Submit Your Daily Activity</h4>
+            </div>
+            <div class="card-body">
+                <form id="activityForm" action="/api/daily-activity/adddetails" method="POST" enctype="multipart/form-data">
+                    <!-- Name Field -->
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Name</label>
+                        <input type="text" id="name" name="name" class="form-control" placeholder="Enter your name" required>
+                    </div>
+
+                    <!-- Date and Time Field -->
+                    <div class="mb-3">
+                        <label for="dateTime" class="form-label">Date and Time</label>
+                        <input type="datetime-local" id="dateTime" name="dateTime" class="form-control" required>
+                    </div>
+
+                    <!-- Doctor Visited Field -->
+                    <div class="mb-3">
+                        <label for="doctorVisited" class="form-label">Doctor Visited</label>
+                        <input type="text" id="doctorVisited" name="doctorVisited" class="form-control" placeholder="Enter doctor's name" required>
+                    </div>
+
+                    <!-- Product Promoted Field -->
+                    <div class="mb-3">
+                        <label for="productPromoted" class="form-label">Product Promoted</label>
+                        <select id="productPromoted" name="productPromoted" class="form-select" multiple required>
+                            <option value="Paracetamol">Paracetamol</option>
+                            <option value="Ibuprofen">Ibuprofen</option>
+                            <option value="Amoxicillin">Amoxicillin</option>
+                            <option value="Cough Syrup">Cough Syrup</option>
+                        </select>
+                    </div>
+
+                    <!-- Location Field -->
+                    <div class="mb-3">
+                        <label for="location" class="form-label">Location</label>
+                        <input type="text" id="location" name="location" class="form-control" readonly required>
+                        <button type="button" id="captureLocation" class="btn btn-sm btn-outline-secondary mt-2">Capture Location</button>
+                    </div>
+
+                    <!-- Photo Upload or Live Capture -->
+                    <div class="mb-3">
+                        <label for="photoUpload" class="form-label">Live Photo</label>
+                        <video id="video" class="w-100 mb-2" autoplay></video>
+                        <button type="button"onClick="capturePhoto()" id="capturePhoto" class="btn btn-sm btn-primary mb-2">Capture Photo</button>
+                        <canvas id="canvas" class="d-none"></canvas>
+                        <input type="hidden" id="photoData" name="photoData">
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+		function capturePhoto() {
+		            const videoElement = document.getElementById('camera');
+		            const canvasElement = document.getElementById('canvas');
+		            const context = canvasElement.getContext('2d');
+		
+		            canvasElement.width = videoElement.videoWidth;
+		            canvasElement.height = videoElement.videoHeight;
+		            context.drawImage(videoElement, 0, 0, canvasElement.width, canvasElement.height);
+					
+					
+		
+		            const photoData = canvasElement.toDataURL('image/jpeg');
+					
+					const liveDateTime = data.liveDateTime || "Not Available";
+
+		            document.getElementById('photo_data').value = photoData;
+					
+					
+		
+		            alert("Photo captured!");
+		        }
+		
+        document.getElementById('captureLocation').addEventListener('click', () => {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition((position) => {
+                    document.getElementById('location').value = `Lat: ${position.coords.latitude}, Lon: ${position.coords.longitude}`;
+                }, () => {
+                    alert('Unable to capture location.');
+                });
+            } else {
+                alert('Geolocation is not supported by this browser.');
+            }
+        });
+
+        document.getElementById('capturePhoto').addEventListener('click', () => {
+            const video = document.getElementById('video');
+            const canvas = document.getElementById('canvas');
+            const context = canvas.getContext('2d');
+
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            context.drawImage(video, 0, 0);
+
+            document.getElementById('photoData').value = canvas.toDataURL('image/png');
+        });
+
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                document.getElementById('video').srcObject = stream;
+            })
+            .catch(() => {
+                alert('Unable to access camera.');
+            });
+    </script>
+</body>
+</html>

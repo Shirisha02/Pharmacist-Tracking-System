@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Doctor Details</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .side-nav {
+            width: 250px;
+            background-color: #2c3e50;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 20px;
+        }
+
+        .side-nav .logo {
+            font-size: 1.5em;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .side-nav ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .side-nav ul li {
+            margin: 15px 0;
+        }
+
+        .side-nav ul li a {
+            text-decoration: none;
+            color: white;
+            font-size: 1em;
+            display: block;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .side-nav ul li a:hover {
+            background-color: #34495e;
+        }
+
+        .side-nav .profile {
+            text-align: center;
+        }
+
+        .side-nav .profile img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+
+        .side-nav .profile button {
+            background-color: #e74c3c;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .side-nav .profile button:hover {
+            background-color: #c0392b;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+
+        footer {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="side-nav">
+        <div>
+            <div class="logo">MedTrackPro</div>
+            <ul>
+                <li><a href="representative_dashboard.html">Home</a></li>
+                <li><a href="daily_submission.html">Submit Activity</a></li>
+                <li><a href="View_Logs.html">Logs</a></li>
+                <li><a href="reports.html">Reports</a></li>
+                <li><a href="Contact_Admin.html">Contact Admin</a></li>
+                <li><a href="Add_Doctor.html">Doctor Details</a></li>
+            </ul>
+        </div>
+        <div class="profile">
+            <img src="https://via.placeholder.com/60" alt="Profile Picture">
+            <p>John Doe</p>
+            <button>Logout</button>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <header class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="text-primary">Add Doctor Details</h1>
+        </header>
+
+        <main>
+            <h2 class="mb-4">New Doctor Information</h2>
+			<form id="doctorForm" action="/api/doctors/addDoctors" method="POST" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label for="doctorName" class="form-label">Doctor Name</label>
+                    <input type="text" id="doctorName" name="doctor_name" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label for="doctorSpecialty" class="form-label">Specialty</label>
+                    <select id="doctorSpecialty" name="specialty" class="form-select" required>
+                        <option value="" disabled selected>Select Specialty</option>
+                        <option value="Cardiology">Cardiology</option>
+                        <option value="Dermatology">Dermatology</option>
+                        <option value="Neurology">Neurology</option>
+                        <option value="Pediatrics">Pediatrics</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="doctorLocation" class="form-label">Location</label>
+                    <input type="text" id="doctorLocation" name="location" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label for="doctorContact" class="form-label">Contact Info</label>
+                    <input type="email" id="doctorContact" name="contact_email" class="form-control" placeholder="Email" required>
+                    <input type="text" id="doctorPhone" name="contact_phone" class="form-control mt-2" placeholder="Phone" required>
+                </div>
+                <div class="mb-3">
+                    <label for="doctorNotes" class="form-label">Notes</label>
+                    <textarea id="doctorNotes" name="notes" class="form-control" rows="4"></textarea>
+                </div>
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-success">Save Doctor Details</button>
+                </div>
+            </form>
+        </main>
+
+        <footer class="text-center">
+            <p>&copy; 2024 MedTrackPro. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
